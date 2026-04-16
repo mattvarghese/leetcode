@@ -1,3 +1,6 @@
+# https://leetcode.com/problems/two-sum/description/
+
+
 def solve(nums, target):
     """
     Finds two numbers in an array that sum to a specific target using a one-pass hash map.

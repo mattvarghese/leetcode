@@ -39,9 +39,18 @@ source .venv/bin/activate  # Linux/macOS
 pip install -r requirements.txt
 ```
 
+### C++
+```bash
+cd cpp
+mkdir build && cd build
+cmake ..
+make
+./run_tests
+```
+
 ### TypeScript
 ```bash
 cd typescript
 npm install
-npm test  # Run solution test suites
+npm test
 ```
