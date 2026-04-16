@@ -7,12 +7,15 @@ A collection of LeetCode problems solved across multiple programming languages.
 The repository will be organized by language to ensure environment isolation and optimal IDE support.
 
 Current plan for the structure: 
+
+```text
 .
 ├── python/          # Python 3.13+ (venv-based, Type Hints, Ruff)
 ├── typescript/      # Node.js 20+, Vitest for unit testing
 ├── cpp/             # Modern C++ (C++20), CMake build system
 ├── rust/            # Cargo-managed crates
 └── .github/         # CI/CD workflows for automated solution verification
+```
 
 ## 📊 Progress Dashboard
 
@@ -29,12 +32,16 @@ Current plan for the structure:
 ## 🛠️ Local Development Setup
 
 ### Python
+```bash
 cd python
 python -m venv .venv
 source .venv/bin/activate  # Linux/macOS
 pip install -r requirements.txt
+```
 
 ### TypeScript
+```bash
 cd typescript
 npm install
 npm test  # Run solution test suites
+```
