@@ -21,9 +21,10 @@ Current plan for the structure:
 
 | #   | Problem | Difficulty | Python | TypeScript | C++ | Rust |
 | :-- | :--- | :--- | :---: | :---: | :---: | :---: |
-| 001 | [Two Sum](https://leetcode.com/problems/two-sum/) | Easy | ✅ | ✅ | 🏗️ | ❌ |
-| 002 | [Add Two Numbers](https://leetcode.com/problems/add-two-numbers/) | Medium | ✅ | ❌ | ❌ | ❌ |
-| 020 | [Valid Parentheses](https://leetcode.com/problems/valid-parentheses/) | Easy | ✅ | ✅ | ✅ | ✅ |
+| 001 | [Two Sum](https://leetcode.com/problems/two-sum/) | Easy | ✅ | ❌ | ❌ | ❌ |
+| 002 | [Add Two Numbers](https://leetcode.com/problems/add-two-numbers/) | Medium | ❌ | ❌ | ✅ | ❌ |
+| 003 | [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) | Medium | ✅ | ❌ | ❌ | ❌ |
+| 004 | [Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/) | Hard | ❌ | ❌ | ✅ | ❌ |
 
 **Legend:** ✅ Solved | 🏗️ In Progress | ❌ Not Started
 
