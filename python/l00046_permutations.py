@@ -1,5 +1,32 @@
 # https://leetcode.com/problems/permutations/
 
+# Algorithm:
+
+# fun(nums, len, pos, list)
+# {
+#     if pos == len-1
+#     {
+#         add permutation to list
+#     }
+#     for (i = pos to len -1)
+#     {
+#         // swap
+#         left=nums[pos]
+#         right = nums[i]
+#         nums[pos]=right
+#         nums[i]=left
+
+#         // recurse
+#         fun(nums, len, pos+1, list)
+
+#         // undo swap
+#         nums[pos] = left
+#         nums[i] = right
+#     }
+# }
+
+# fun(nums, len(nums), 0, resultList)
+
 from typing import List
 
 
