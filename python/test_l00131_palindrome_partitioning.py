@@ -1,10 +1,10 @@
 # https://leetcode.com/problems/palindrome-partitioning/
 
 import pytest
-from l00131_palindrome_partitioning import Solution, Solution2
+from l00131_palindrome_partitioning import Solution, Solution2, Solution3
 
 
-@pytest.mark.parametrize("sol", [Solution(), Solution2()])
+@pytest.mark.parametrize("sol", [Solution(), Solution2(), Solution3()])
 @pytest.mark.parametrize(
     "s, expected",
     [
@@ -47,7 +47,7 @@ def test_partition_logic(sol, s, expected):
     )
 
 
-@pytest.mark.parametrize("sol", [Solution(), Solution2()])
+@pytest.mark.parametrize("sol", [Solution(), Solution2(), Solution3()])
 def test_partition_integrity(sol):
     """
     Verify architectural integrity:
@@ -65,7 +65,7 @@ def test_partition_integrity(sol):
             assert part == part[::-1], f"Found non-palindrome substring: {part}"
 
 
-@pytest.mark.parametrize("sol", [Solution(), Solution2()])
+@pytest.mark.parametrize("sol", [Solution(), Solution2(), Solution3()])
 def test_performance_limit(sol):
     """
     Verify that the system handles larger inputs without hitting

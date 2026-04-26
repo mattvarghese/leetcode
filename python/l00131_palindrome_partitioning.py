@@ -1,6 +1,44 @@
 # https://leetcode.com/problems/palindrome-partitioning/
 
+# from functools import lru_cache
+from functools import cache
 from typing import List
+
+
+class Solution3:
+    def partition(self, s: str) -> List[List[str]]:
+        lS = len(s)
+        results: List[List[str]] = []
+        self.recursePart(s, lS, 0, [], results)
+        return results
+
+    # @lru_cache(None) # None means the cache has no size limit
+    @cache  # @cache does the same thing more easily than @lru_cache(None)
+    def isPalindrome(self, s: str, startI: int, endI: str):
+        if startI == endI:
+            return True
+        if s[startI] == s[endI]:
+            if startI == endI + 1:
+                return True
+            return self.isPalindrome(s, startI + 1, endI - 1)
+        return False
+
+    def recursePart(
+        self,
+        s: str,
+        lS: int,
+        start: int,
+        current: List[str],
+        results: List[List[str]],
+    ):
+        if start == lS:
+            results.append(current[:])
+        else:
+            for endI in range(start, lS):
+                if self.isPalindrome(s, start, endI):
+                    current.append(s[start : endI + 1])
+                    self.recursePart(s, lS, endI + 1, current, results)
+                    current.pop()
 
 
 class Solution:
