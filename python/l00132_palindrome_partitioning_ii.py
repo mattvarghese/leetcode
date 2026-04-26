@@ -85,3 +85,36 @@ class Solution:
                 dp[CLeft][1] = max(dp[CLeft][1], CLeft - left + 1)
             left -= 1
             right += 1
+
+
+class Solution3:
+    def minCut(self, s: str) -> int:
+        if not s:
+            return 0
+
+        lS = len(s)
+        # dp2[i] = min cuts for prefix s[0...i]
+        # Initialize with worst case: dp2[i] = i cuts (e.g., "abc" -> 2)
+        dp2 = list(range(lS))
+
+        for center in range(lS):
+            # 1. Odd Expansion: Center is at 'center' (e.g., "aba")
+            self.expand_and_update(s, center, center, dp2)
+            # 2. Even Expansion: Center is between 'center' and 'center+1' (e.g., "aa")
+            self.expand_and_update(s, center, center + 1, dp2)
+
+        return dp2[lS - 1]
+
+    def expand_and_update(self, s: str, left: int, right: int, dp2: List[int]):
+        while left >= 0 and right < len(s) and s[left] == s[right]:
+            # If the current palindrome starts at the beginning of the string, 0 cuts!
+            if left == 0:
+                dp2[right] = 0
+            else:
+                # Otherwise, it's 1 cut + the best way to cut the prefix before this palindrome
+                # dp2[right] = min(current_min, 1 + min_cuts_before_this_palindrome)
+                if dp2[left - 1] + 1 < dp2[right]:
+                    dp2[right] = dp2[left - 1] + 1
+
+            left -= 1
+            right += 1

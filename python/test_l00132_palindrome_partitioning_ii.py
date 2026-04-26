@@ -1,7 +1,7 @@
 # https://leetcode.com/problems/palindrome-partitioning-ii/
 
 import pytest
-from l00132_palindrome_partitioning_ii import Solution, Solution2
+from l00132_palindrome_partitioning_ii import Solution, Solution2, Solution3
 
 
 @pytest.mark.parametrize(
@@ -18,6 +18,6 @@ from l00132_palindrome_partitioning_ii import Solution, Solution2
         ("apapples", 4),  # "apa" | "pp" | "l" | "e" | "s"
     ],
 )
-@pytest.mark.parametrize("sol", [Solution(), Solution2()])
+@pytest.mark.parametrize("sol", [Solution(), Solution2(), Solution3()])
 def test_min_cut(sol, s, expected):
     assert sol.minCut(s) == expected
