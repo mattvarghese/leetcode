@@ -193,3 +193,69 @@ To verify
     FROM users u
     LEFT JOIN user_items i ON u.user_id = i.user_id
     WHERE u.username IN ('barbie', 'ken');
+
+
+
+Stored procedures
+
+For stored procedures, we'll add a team_id column to the users database
+and populate / update users..
+    ALTER TABLE users ADD COLUMN team_id INT;
+    UPDATE users SET team_id = 1 WHERE user_id IN (1, 2);
+    INSERT INTO users (username, password, active, team_id) VALUES 
+        ('skipper', 'skipper', true, 1),
+        ('midge', 'midge', true, 1),
+        ('raquelle', 'raquelle', false, 2),
+        ('ryan', 'ryan', true, 2),
+        ('teresa', 'teresa', true, 2);
+
+Now create a stored procedures
+    CREATE OR REPLACE PROCEDURE provision_active_welcome_kits(target_team_id INT)
+    LANGUAGE plpgsql
+    AS $$
+    DECLARE
+        emp_record RECORD;
+    BEGIN
+        FOR emp_record IN 
+            SELECT user_id, username FROM users 
+            WHERE team_id = target_team_id AND active = true 
+        LOOP
+            -- Updated to use 'quantity' and 'done' columns
+            INSERT INTO user_items (user_id, item_name, quantity, done)
+            VALUES 
+                (emp_record.user_id, 'Laptop', 1, false),
+                (emp_record.user_id, 'Security Badge', 1, false);
+                
+            RAISE NOTICE 'Provisioned kit for: %', emp_record.username;
+                
+        END LOOP;
+    END;
+    $$;
+
+To inspect stored procedures
+    \df: Lists all functions and procedures.
+    \dfn: Lists only the names and types.
+    \df+: Shows extra details, including the source code (the logic between the BEGIN and END blocks).
+
+Using SQL
+    SELECT 
+        routine_name, 
+        routine_type, 
+        data_type AS return_type
+    FROM 
+        information_schema.routines
+    WHERE 
+        routine_schema = 'public'
+        AND routine_type = 'PROCEDURE';
+
+To see the code
+    SELECT routine_definition 
+    FROM information_schema.routines 
+    WHERE routine_name = 'provision_active_welcome_kits';
+
+Call the stored procedure
+    CALL provision_active_welcome_kits(1);
+
+Verify results
+SELECT * FROM user_items ORDER BY user_id;
+
