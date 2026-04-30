@@ -1,0 +1,136 @@
+This file contains SQL notes for me to refresh my SQL knowledge.
+
+In this same folder, there is a docker-compose.yaml file defining a PostgreSQL container. 
+The container stores data in ./postgres_data/ and that data will persist across launches.
+
+To bring up the container, do
+$ docker compose up -d
+To take it down, do
+$ docker compose down
+
+The container is set up with PostgreSQL username and password in the docker compose.
+(Yes, this is not how you should do it for security, but this one is just for practice.)
+Username: user
+Password: password
+
+To connect to the container once it is up, do
+$ docker exec -it postgres-practice bash
+
+To start PostgreSQL from bash, do
+# psql -U user -d practice_db
+(Since this is a local connection, it will not ask password)
+
+Backslash commands
+\?: The ultimate "help" menu for all backslash commands.
+\h [command]: Provides the specific SQL syntax for a command (e.g., \h CREATE INDEX).
+\e: Opens your current query in your system's default text editor (like Vim or Nano). This is a lifesaver for writing multi-line complex joins during a live session.
+\l: lists databases
+\dt: List tables in database
+\c [database_name]: \connect to a different database / switch databases
+\dx (List Extensions): Postgres is famous for its "extensibility." Since you are a systems architect, you'll want to see if tools like pg_stat_statements (for performance monitoring) or PostGIS (for geographic/ZIP code data) are installed.
+\di (List Indexes): Essential for verifying that your "Search" or "Referral" tables are properly optimized. It shows the index name, table, and type (B-tree, GIN, etc.).
+\df+ (List Functions with Details): This shows the source code and security levels of stored procedures. At a Senior Staff level, you might be reviewing how business logic is distributed between the application and the database.
+\sf [function_name] (Show Function): This allows you to read the full SQL or PL/pgSQL source code of a specific function directly in the terminal.
+\timing: This toggles a stopwatch for every command you run. It’s the quickest way to see if a query took 5ms or 500ms.
+\watch [N]: This executes the previous command every N seconds. It’s incredibly useful for watching a long-running migration or seeing a "Referral Count" update in real-time as you test an API.
+
+ACID Principles
+ACID is a set of four properties that guarantee database transactions are processed reliably.
+    Atomicity ("All or Nothing"): Ensures that a transaction is treated as a single unit. If any part of the transaction fails, the entire transaction is aborted (rolled back), and the database is left unchanged.
+    Consistency ("Rules Followed"): Guarantees that a transaction transforms the database from one valid state to another, maintaining all predefined rules, such as constraints, cascades, and triggers.
+    Isolation ("Independent Execution"): Ensures that concurrent execution of transactions leaves the database in the same state as if the transactions were executed sequentially. This prevents "dirty reads" where one process sees the uncommitted work of another.
+    Durability ("Permanent"): Once a transaction has been committed, it will remain committed even in the case of a system failure (e.g., power outage or crash).
+
+Transactions:
+In SQL, if you wrap a bunch of commands with 
+    BEGIN;
+        <commands>;
+        <commands>;
+        ...;
+    COMMIT;
+Then, these will run as an atomic Transaction.
+Other commands:
+ROLLBACK;: The "Abort" command.
+    What it does: Reverts every change made since the BEGIN statement.
+    Why use it: Essential for clearing an "Aborted" state after a query fails. It also immediately releases any Row Locks held by the transaction, preventing system-wide bottlenecks.
+SAVEPOINT [name];: A "Checkpoint" within a transaction.
+    What it does: Sets a named marker at the current state of the transaction.
+    Why use it: Allows for Partial Rollbacks. If a non-critical part of a multi-step process fails, you can use ROLLBACK TO [name]; to undo only those specific changes while keeping the rest of the transaction alive.
+
+
+
+[Sample practice SQL]
+-- Table 1: User Management
+CREATE TABLE IF NOT EXISTS users (
+    user_id SERIAL PRIMARY KEY,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    active BOOLEAN DEFAULT true
+);
+
+-- Table 2: User Inventory / Tasks
+-- 'user_id' links this table back to the 'users' table
+CREATE TABLE IF NOT EXISTS user_items (
+    item_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(user_id),
+    item_name TEXT NOT NULL,
+    quantity INTEGER NOT NULL CHECK (quantity >= 0),
+    done BOOLEAN DEFAULT false
+);
+
+
+To see ROLLBACK; in action do:
+    \dt
+
+    BEGIN;
+        DROP TABLE user_items;
+        DROP TABLE users;
+    ROLLBACK;
+
+    \dt
+You cannot copy past \dt along with SQL
+Alternatively, you can do all of it in SQL through
+    -- Check tables before
+    SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
+
+    BEGIN;
+        DROP TABLE user_items;
+        DROP TABLE users;
+        -- Check tables during (will show empty or fewer tables)
+        SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
+    ROLLBACK;
+
+    -- Check tables after (they are back!)
+    SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
+
+Now, add some items to the table
+    BEGIN;
+
+    -- 1. Insert Users
+    INSERT INTO users (username, password) VALUES ('barbie', 'barbie');
+    INSERT INTO users (username, password) VALUES ('ken', 'ken');
+
+    -- 2. Insert Items for Barbie (using a subquery to find her ID)
+    INSERT INTO user_items (user_id, item_name, quantity, done) VALUES 
+        ((SELECT user_id FROM users WHERE username = 'barbie'), 'Dream House', 1, false),
+        ((SELECT user_id FROM users WHERE username = 'barbie'), 'Pink Convertible', 1, true),
+        ((SELECT user_id FROM users WHERE username = 'barbie'), 'Fashion Closet', 45, false),
+        ((SELECT user_id FROM users WHERE username = 'barbie'), 'Surfboard', 2, true),
+        ((SELECT user_id FROM users WHERE username = 'barbie'), 'Microphone', 1, false);
+
+    -- 3. Insert Items for Ken
+    INSERT INTO user_items (user_id, item_name, quantity, done) VALUES 
+        ((SELECT user_id FROM users WHERE username = 'ken'), 'Beach Towel', 1, true),
+        ((SELECT user_id FROM users WHERE username = 'ken'), 'Rollerblades', 2, false),
+        ((SELECT user_id FROM users WHERE username = 'ken'), 'Horse', 1, false),
+        ((SELECT user_id FROM users WHERE username = 'ken'), 'Fanny Pack', 1, true),
+        ((SELECT user_id FROM users WHERE username = 'ken'), 'Mojo Dojo House Kit', 12, false);
+
+    COMMIT;
+
+Verify with:
+    SELECT u.username, u.active, i.item_name, i.quantity, i.done
+    FROM users u
+    JOIN user_items i ON u.user_id = i.user_id
+    ORDER BY u.username;
+

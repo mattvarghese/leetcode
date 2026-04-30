@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres-practice
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: practice_db
+    ports:
+      - "5432:5432"
+    volumes:
+      # This maps local folder 'postgres_data' to the container
+      - ./postgres_data:/var/lib/postgresql
