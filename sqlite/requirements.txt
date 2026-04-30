@@ -1,0 +1,8 @@
+httpx
+pytest
+requests
+urllib3
+
+#for sql
+sqlalchemy
+psycopg2-binary
