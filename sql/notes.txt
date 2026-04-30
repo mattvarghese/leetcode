@@ -134,3 +134,62 @@ Verify with:
     JOIN user_items i ON u.user_id = i.user_id
     ORDER BY u.username;
 
+To create an index on user_items.user_id
+    CREATE INDEX idx_user_items_user_id ON user_items(user_id);
+The above locks the table up. To avoid that
+    CREATE INDEX CONCURRENTLY idx_user_items_user_id ON user_items(user_id);
+Then do
+    \di
+    \d user_items
+to see the details 
+
+Try
+    EXPLAIN ANALYZE 
+    SELECT * FROM user_items 
+    WHERE user_id = (SELECT user_id FROM users WHERE username = 'barbie');
+to see the index getting used
+
+EXPLAIN: Displays the estimated execution plan and cost calculated by the query planner without actually running the query.
+ANALYZE: Scans the table to collect and update internal statistics (row counts, data distribution) so the planner can make better decisions.
+EXPLAIN ANALYZE: Executes the query and provides the actual run-time statistics alongside the planner's initial estimates for direct comparison.
+
+Initially, index doesn't get used because we only have 10 rows. So add more.
+    INSERT INTO user_items (user_id, item_name, quantity, done)
+    SELECT 
+        (SELECT user_id FROM users WHERE username = 'ken'), 
+        'Junk Item #' || i, 
+        (random() * 100)::int, 
+        (random() > 0.5)
+    FROM generate_series(1, 1000) AS i;
+Then test again
+    EXPLAIN ANALYZE 
+    SELECT * FROM user_items 
+    WHERE user_id = (SELECT user_id FROM users WHERE username = 'barbie');
+To clear the Junk
+    DELETE FROM user_items WHERE item_name LIKE 'Junk Item%';
+
+Aggregation - show me each user and total quantity of items they own
+    SELECT u.username, SUM(i.quantity) as total_items
+    FROM users u
+    LEFT JOIN user_items i ON u.user_id = i.user_id
+    GROUP BY u.username;
+
+Update table users so that ken is no longer active, and then delete all items that ken owns
+    BEGIN;
+
+    -- 1. Deactivate Ken
+    UPDATE users 
+    SET active = false 
+    WHERE username = 'ken';
+
+    -- 2. Delete all items belonging to Ken
+    DELETE FROM user_items 
+    WHERE user_id = (SELECT user_id FROM users WHERE username = 'ken');
+
+    COMMIT;
+
+To verify
+    SELECT u.username, u.active, i.item_name 
+    FROM users u
+    LEFT JOIN user_items i ON u.user_id = i.user_id
+    WHERE u.username IN ('barbie', 'ken');
