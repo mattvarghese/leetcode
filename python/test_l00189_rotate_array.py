@@ -1,7 +1,7 @@
 # 189 https://leetcode.com/problems/rotate-array/
 
 import pytest
-from l00189_rotate_array import Solution
+from l00189_rotate_array import Solution, Solution2
 
 
 @pytest.mark.parametrize(
@@ -23,8 +23,8 @@ from l00189_rotate_array import Solution
         ([1, 2, 3, 4, 5], 11, [5, 1, 2, 3, 4]),
     ],
 )
-def test_rotate_array(nums, k, expected):
-    sol = Solution()
+@pytest.mark.parametrize("sol", [Solution(), Solution2()])
+def test_rotate_array(nums, sol, k, expected):
 
     # We must pass a copy or a fresh list because it's in-place
     test_input = list(nums)
