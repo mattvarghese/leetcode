@@ -1,0 +1,162 @@
+
+# Create the parent directory
+mkdir -p mongodb-scaled/
+
+# Move into the project directory
+cd mongodb-scaled
+
+# Create all necessary files
+touch docker-compose.yaml notes.txt initialize.sh down.sh up.sh clean.sh requirements.txt mongo_scale.py .gitignore
+
+# Make the shell scripts executable
+chmod +x initialize.sh down.sh up.sh clean.sh
+
+# First run
+./initialize.sh
+
+# Take down
+./down.sh
+
+# Bring up
+./up.sh
+
+# Permanent deletion
+./clean.sh
+
+
+Basic Commands (The "Mongosh" CLI)
+To connect: 
+    $ docker exec -it mongos mongosh
+
+`show dbs`: List databases.
+`use practice_db`: Switch to a database.
+`db.createCollection("users")`: (Optional) Explicitly create a collection.
+`db.users.insertOne({ username: "barbie" })`: Insert a record.
+`db.users.find().pretty()`: The Mongo equivalent of SELECT *.
+`db.users.updateOne({username: "barbie"}, {$set: {active: true, items:[]}})`: Update a record.
+To create an index on your users collection for the username field in ascending order:
+    `db.users.createIndex({ username: 1 })`
+To verify if a query is actually using an index, you can append `.explain("executionStats")` to your query.
+    Ex: `db.users.find({ username: "barbie" }).explain("executionStats")`
+
+Key Concepts
+No Joins: In Mongo, you generally embed data (keep items inside the user document)
+    or use references (Manual Joins), though `$lookup` exists for aggregation.
+BSON: Data is stored as Binary JSON, 
+    allowing for arrays and nested objects as first-class citizens.
+Capped Collections: Great for logs; 
+    they automatically overwrite the oldest entries when they reach a size limit.
+
+See python code for how to use database from python
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===========================
+
+To enable authentication in your sharded cluster, you need to add a Security Keyfile. In a sharded environment, the keyfile serves two purposes: it enables internal membership authentication between the shards/config servers and it triggers the requirement for a username/password for external clients.
+
+1. Generate the Keyfile
+Since you are likely on your Ubuntu system, run this command in your project directory to create the key:
+
+Bash
+openssl rand -base64 756 > mongo-keyfile
+chmod 400 mongo-keyfile
+2. Update docker-compose.yaml
+You need to map this keyfile to every service and update the startup commands to include the --keyFile flag.
+
+YAML
+services:
+  configsvr01:
+    image: mongo:latest
+    container_name: configsvr01
+    # Add --keyFile and --auth
+    command: mongod --configsvr --replSet cfgrs --port 27017 --bind_ip_all --keyFile /data/configdb/mongo-keyfile
+    volumes:
+      - ./data/config01:/data/db
+      - ./mongo-keyfile:/data/configdb/mongo-keyfile # Map the keyfile
+
+  # ... Apply the same pattern to configsvr02 and configsvr03 ...
+
+  shard1a:
+    image: mongo:latest
+    container_name: shard1a
+    command: mongod --shardsvr --replSet shard1rs --port 27017 --bind_ip_all --keyFile /data/configdb/mongo-keyfile
+    volumes:
+      - ./data/shard1a:/data/db
+      - ./mongo-keyfile:/data/configdb/mongo-keyfile
+
+  # ... Apply the same pattern to ALL shard nodes (1b, 2a, 2b, 3a, 3b) ...
+
+  mongos:
+    image: mongo:latest
+    container_name: mongos
+    # mongos only needs --keyFile to talk to the cluster; --auth is implicit
+    command: mongos --configdb cfgrs/configsvr01:27017,configsvr02:27017,configsvr03:27017 --bind_ip_all --port 27017 --keyFile /data/configdb/mongo-keyfile
+    ports:
+      - "27117:27017"
+    volumes:
+      - ./mongo-keyfile:/data/configdb/mongo-keyfile
+    depends_on:
+      - configsvr01
+      - shard1a
+3. Create the Admin User
+Once the cluster is up with the keyfile, it enters a "localhost exception" mode. You must create the first user through the mongos router immediately:
+
+Enter the mongos shell:
+docker exec -it mongos mongosh
+
+Create the admin:
+
+JavaScript
+use admin
+db.createUser({
+  user: "admin",
+  pwd: "password", // Use a secure password
+  roles: [ { role: "root", db: "admin" } ]
+})
+4. Updated Python Connection String
+Now that authentication is active, your pymongo client will need the credentials to get past the gate:
+
+Python
+# Updated connection string for authenticated access
+uri = "mongodb://admin:password@localhost:27117/?authSource=admin"
+with pymongo.MongoClient(uri) as client:
+    db = client.practice_db
+    # Your authenticated operations here
+Why this is necessary
+In MongoDB sharding, you cannot have "half-security." If you want a password for your mongos router, all back-end shards and config servers must also be secured so they can verify they are part of the same trusted cluster. The mongo-keyfile acts as the shared secret that lets shard1a talk to configsvr01 securely.
+
+Does the mongo-keyfile setup make sense with your current volume structure?
+
+
+
+
+
+=== MONGO CLUSTER NOTES ===
+
+1. Connect to the Router (Shell):
+   docker exec -it mongos mongosh
+
+2. Check Shard Status:
+   sh.status()
+
+3. Cluster Topology:
+   - Config Servers: Port 27017 (Internal)
+   - Shards 1-3: Port 27017 (Internal)
+   - Mongos (Router): Port 27117 (External Host)
+
+4. Key Sharding Commands:
+   - sh.enableSharding("db_name")
+   - sh.shardCollection("db_name.collection", { "key": 1 })
