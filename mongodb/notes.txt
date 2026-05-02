@@ -1,0 +1,32 @@
+
+First setup the environment
+
+mkdir -p ~/projects/leetcode/mongodb
+cd ~/projects/leetcode/mongodb
+touch docker-compose.yaml notes.txt requirements.txt mongo_practice.py .gitignore
+
+Then, add contents to the files
+
+
+Unlike Postgres, Mongo is schemaless. 
+You don't "Create Tables"; you just insert a document into a Collection, 
+and if the collection doesn't exist, Mongo creates it on the fly.
+
+Basic Commands (The "Mongosh" CLI)
+To connect: 
+    $ docker exec -it mongodb-practice mongosh -u admin -p password
+
+`show dbs`: List databases.
+`use practice_db`: Switch to a database.
+`db.createCollection("users")`: (Optional) Explicitly create a collection.
+`db.users.insertOne({ username: "Barbie" })`: Insert a record.
+`db.users.find().pretty()`: The Mongo equivalent of SELECT *.
+`db.users.updateOne({username: "Barbie"}, {$set: {active: true, items:[]}})`: Update a record.
+
+Key Concepts
+No Joins: In Mongo, you generally embed data (keep items inside the user document)
+    or use references (Manual Joins), though `$lookup` exists for aggregation.
+BSON: Data is stored as Binary JSON, 
+    allowing for arrays and nested objects as first-class citizens.
+Capped Collections: Great for logs; 
+    they automatically overwrite the oldest entries when they reach a size limit.
