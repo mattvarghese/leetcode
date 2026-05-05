@@ -37,12 +37,12 @@ def test_jump(sol, nums, expected_jumps):
     assert sol.jump(nums) == expected_jumps
 
 
-def test_large_array_performance():
+@pytest.mark.parametrize("sol", [Solution(), Solution2()])
+def test_large_array_performance(sol):
     """
     Optional: Test with a larger array to see if the O(N^2) DP
     implementation holds up or hits a timeout.
     """
-    sol = Solution()
     # 1000 elements all with jump value 1
     nums = [1] * 1000
     assert sol.jump(nums) == 999  # n-1 jumps
