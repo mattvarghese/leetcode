@@ -62,10 +62,15 @@ npm test
 * Always ask,
   * What is the current power of n for `big O`?
   * Can I do it in one fewer power of n?
+  * Should you convert `float`s to `int`s to avoid precision errors?
 * Break the problem down into component pieces
 * Think about critical insights and their complexities
 * Sum (1 ... n) = `n(n+1)/2`
 * Sum of Squares (1 ... n) = `n(n+1)(2n+1)/6`
+* To find smallest bit set, `x = val&-val` then `x.bit_length() - 1` (bit  indices start at 0. 2^0 = 1)
+  * `bit_length()` returns number of bits required to represent in binary. 
+  * For powers of 2, this is the highest bit. 
+  * The lowest bit set, our result of `val & -val` is always a power of 2
 * To see if something is a power of two: `x BitwiseAND (x-1) == 0`
   * `is_power_of_two = (x > 0) and (x & (x - 1) == 0)`
   * To count number of bits set (**Brian Kernighan’s Algorithm**):
@@ -89,5 +94,33 @@ npm test
   * Also, if `a*a + b*b = c*c`, then multiplying with a scaling factor, `ka*ka + kb*kb = kc*kc`
   * Triplets where scaling factor is 1 are **Primitive Pythagorean Triplets**
 * Permutation: `p(n,k) = n! / (n-k)!`
-* Combination: `c(n,k) = n! / k!(n-k)!`
+* Combination: `c(n,k) = n! / k!(n-k)!` without repetitions
+  * With repetitions: = `c(n+k-1,k) = (n+k-1)! / k! (n-1)!`  (or k items into n bins)
 
+
+
+# Analytical Derivation of Power Sums
+
+The general strategy for deriving the formula for the sum of $p$-th powers relies on the **Method of Differences** (telescoping sums) and the **Binomial Theorem**.
+
+# 1. The Binomial Expansion
+To derive the sum of powers up to $k$, we utilize the expansion of $(n+1)^{k+1}$:
+$$(n+1)^k = \sum_{r=0}^{k} \binom{k}{r} n^{k-r}$$
+
+# 2. The Method of Differences
+By shifting the $n^k$ term to the left side, we create a difference identity:
+$$(n+1)^k - n^k = \binom{k}{1}n^{k-1} + \binom{k}{2}n^{k-2} + \dots + \binom{k}{k}$$
+
+When we sum both sides from $1$ to $N$, the left side "telescopes," meaning all intermediate terms cancel out except for the boundaries:
+$$\sum_{n=1}^N ((n+1)^k - n^k) = (N+1)^k - 1^k$$
+
+# 3. Solving for the $k$-th Power
+The right side of the summation becomes a combination of lower-order power sums:
+$$(N+1)^k - 1 = \binom{k}{1}\sum n^{k-1} + \binom{k}{2}\sum n^{k-2} + \dots + \binom{k}{k}\sum 1$$
+
+To find the formula for the sum of $k-1$ powers, you simply isolate the $\sum n^{k-1}$ term and substitute the known formulas for all lower-order sums.
+
+# 4. Summary of Common Results
+*   **Sum of Integers ($k=2$):** $\sum_{n=1}^N n = \frac{N(N+1)}{2}$
+*   **Sum of Squares ($k=3$):** $\sum_{n=1}^N n^2 = \frac{N(N+1)(2N+1)}{6}$
+*   **Sum of Cubes ($k=4$):** $\sum_{n=1}^N n^3 = \left[ \frac{N(N+1)}{2} \right]^2$
