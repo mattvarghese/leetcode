@@ -91,8 +91,13 @@ npm test
   * `a = m*m - n*n`  (m<sup>2</sup> - n<sup>2</sup>)
   * `b = 2mn`
   * `c = m*m + n*n`  (m<sup>2</sup> + n<sup>2</sup>)
-  * Also, if `a*a + b*b = c*c`, then multiplying with a scaling factor, `ka*ka + kb*kb = kc*kc`
+  * Note1: `m > n > 0` here
+  * Note2: if `(m-n) % 2 != 0` AND  `gcd(m,n)` = 1, this gives **Primitive Pythagorean Triplets**
+  * Also, if`a*a + b*b = c*c`, then multiplying with a scaling factor, `ka*ka + kb*kb = kc*kc`
   * Triplets where scaling factor is 1 are **Primitive Pythagorean Triplets**
+* **Euclid's algorithm** for GCD:
+  * if a>b, gcd(a,b)=gcd(b,a%b).
+  * So we can recursively remainder and swap until mod of the two numbers is 0 at which point the minimum (second) is GCD
 * Permutation: `p(n,k) = n! / (n-k)!`
 * Combination: `c(n,k) = n! / k!(n-k)!` without repetitions
   * With repetitions: = `c(n+k-1,k) = (n+k-1)! / k! (n-1)!`  (or k items into n bins)
