@@ -99,7 +99,125 @@ def euler40():
     return result
 
 
+# https://projecteuler.net/problem=41
+
+
+def euler41_sieve(searchMax: int) -> list[bool]:
+    # Instantly allocates blocks of memory in C under the hood
+    primes = [True] * searchMax
+    primes[0] = primes[1] = False
+
+    # Set all even numbers starting at 4 to False in a single bound slice
+    for i in range(4, searchMax, 2):
+        primes[i] = False
+
+    iterLimit = int(math.sqrt(searchMax)) + 1
+    for i in range(3, iterLimit, 2):
+        if primes[i]:
+            # Step by 2*i to only touch odd multiples (e.g., 9, 15, 21...)
+            for j in range(i * i, searchMax, 2 * i):
+                primes[j] = False
+
+    return primes
+
+
+# Narayana’s combinatorial algorithm
+# itertools.permutations("7654321") is the library way
+def euler41_permutations(digits: list[int]) -> Generator[int, None, None]:
+
+    # 1. Yield the initial state first so we don't miss it
+    yield int("".join([str(i) for i in digits]))
+
+    while True:
+        pivot, target = -1, -1
+
+        # Find the first element that is greater than its successor
+        for j in range(len(digits) - 2, -1, -1):
+            if digits[j] > digits[j + 1]:
+                pivot = j
+                break
+
+        if pivot == -1:
+            break  # Completely sorted in ascending order (base case reached)
+
+        # Find the largest element to the right of pivot that is smaller than digits[pivot]
+        for j in range(len(digits) - 1, pivot, -1):
+            if digits[j] < digits[pivot]:
+                target = j
+                break
+        # Swap the pivot and target
+        digits[pivot], digits[target] = digits[target], digits[pivot]
+
+        # Reverse the suffix to get the next largest lexicographical step down
+        digits[pivot + 1 :] = digits[pivot + 1 :][::-1]
+
+        yield int("".join([str(i) for i in digits]))
+    return
+
+
+def euler41() -> int:
+    searchMax = 7654321
+    primes = euler41_sieve(searchMax + 1)
+    for i in euler41_permutations([7, 6, 5, 4, 3, 2, 1]):
+        if primes[i]:
+            return i
+    return -1
+
+
+# https://projecteuler.net/problem=47
+
+
+def euler47() -> dict[int, list[int]]:
+    sieve = defaultdict(list[int])
+    num, count = 2, 0
+    while True:
+        if num in sieve:
+            # composite
+            for step in sieve[num]:
+                sieve[num + step].append(step)
+            if len(sieve[num]) == 4:
+                count += 1
+            else:
+                count = 0
+            if count == 4:
+                return {
+                    num - 3: sieve[num - 3],
+                    num - 2: sieve[num - 2],
+                    num - 1: sieve[num - 1],
+                    num: sieve[num],
+                }
+        else:
+            # prime
+            sieve[2 * num].append(num)
+            count = 0
+        num += 1
+
+
+# https://projecteuler.net/problem=55
+
+
+def is_lychrel(n: int) -> bool:
+    current = n
+    for _ in range(50):
+        # Reverse and add
+        current += int(str(current)[::-1])
+
+        # Check if the freshly generated sum is a palindrome
+        if str(current) == str(current)[::-1]:
+            return False  # Not a Lychrel number
+
+    return True  # Fell through 50 iterations without hitting a palindrome
+
+
+def euler55() -> int:
+    # Count how many numbers below 10,000 are Lychrel numbers
+    return sum(1 for i in range(1, 10000) if is_lychrel(i))
+
+
 if __name__ == "__main__":
     print(f"Euler 36: {euler36()}")
     print(f"Euler 39: {euler39()}")
     print(f"Euler 40: {euler40()}")
+    print(f"Euler 41: {euler41()}")
+    print(f"Euler 47: {euler47()}")
+    print(f"Euler 55: {euler55()}")

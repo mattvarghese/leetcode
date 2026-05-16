@@ -87,6 +87,16 @@ npm test
   * Total number of factors of N is `(e1+1)(e2+1)...(ek+1)`
 * For max or min in a sliding window, use a deque like in `p__009`
 * **Sieve of Eratosthenes** for primes, see `e00007`
+  * A Modified version of the sieve can get a list of all prime factors
+* **Full-Period Primes (Long Primes)**:
+  * A prime $p$ is a full-period prime in base 10 if the decimal expansion of $1/p$ has a maximum repeating cycle length of exactly $p - 1$ digits.
+  * *Mathematical Truth:* 10 is a **primitive root modulo $p$**. The powers of 10 visit every possible non-zero remainder modulo $p$ before returning to 1 ($10^{p-1} \equiv 1 \pmod p$).
+  * *The Trap:* The decimal blocks often contain leading zeros (e.g., $1/17 = 0.\overline{0588235294117647}$), which must be preserved as character string placeholders if you are evaluating digit-length constraints or structural permutations across multiples.
+  * *High-Efficiency Verification Engine ($O(\log p)$):* To check if a prime $p$ is full-period without running a slow linear long-division simulation loop:
+    1. Find all unique prime factors $\{q_1, q_2, \dots, q_k\}$ of the group order $(p - 1)$.
+    2. For each factor $q$, calculate the maximal proper subgroup exponent: $\text{exp} = (p - 1) / q$.
+    3. Evaluate `pow(10, exp, p)`. If it ever equals `1`, the remainder cycle short-circuits early $\rightarrow$ **Not full-period**.
+    4. If it never hits 1 for any factor divisor, the period is guaranteed to be full length ($p - 1$) $\rightarrow$ **Full-period**.
 * **Euclid's formula** to find pythagorean triplets (`a*a+b*b=c*c` or a<sup>2</sup>+b<sup>2</sup>=c<sup>2</sup>) :
   * `a = m*m - n*n`  (m<sup>2</sup> - n<sup>2</sup>)
   * `b = 2mn`
