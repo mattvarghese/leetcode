@@ -143,4 +143,9 @@ To find the formula for the sum of $k-1$ powers, you simply isolate the $\sum n^
 
 
 # Problems to revisit
+* l00004 - Median of two sorted arrays - binary search across two arrays
+* l00045 - Maximizing over a sliding window
+* l00072 - Edit distance
+* l00108 - Binary Search Trees
+* l00131 - Palindrome Partitioning: dp[i][j] and dp[radius] methods
 * l00214 - KMP-LPS: The Knuth-Morris-Pratt (KMP) Longest Prefix Suffix (LPS) algorithm

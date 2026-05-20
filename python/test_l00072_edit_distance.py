@@ -1,7 +1,7 @@
 # https://leetcode.com/problems/edit-distance/
 
 import pytest
-from l00072_edit_distance import Solution
+from l00072_edit_distance import Solution, Solution2
 
 
 @pytest.mark.parametrize(
@@ -17,6 +17,6 @@ from l00072_edit_distance import Solution
         ("plasma", "altruism", 6),  # Complex shift
     ],
 )
-def test_edit_distance(word1, word2, expected):
-    sol = Solution()
+@pytest.mark.parametrize("sol", [Solution(), Solution2()])
+def test_edit_distance(sol, word1, word2, expected):
     assert sol.minDistance(word1, word2) == expected
