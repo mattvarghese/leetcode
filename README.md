@@ -139,3 +139,8 @@ To find the formula for the sum of $k-1$ powers, you simply isolate the $\sum n^
 *   **Sum of Integers ($k=2$):** $\sum_{n=1}^N n = \frac{N(N+1)}{2}$
 *   **Sum of Squares ($k=3$):** $\sum_{n=1}^N n^2 = \frac{N(N+1)(2N+1)}{6}$
 *   **Sum of Cubes ($k=4$):** $\sum_{n=1}^N n^3 = \left[ \frac{N(N+1)}{2} \right]^2$
+
+
+
+# Problems to revisit
+* l00214 - KMP-LPS: The Knuth-Morris-Pratt (KMP) Longest Prefix Suffix (LPS) algorithm

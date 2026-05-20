@@ -93,6 +93,9 @@ class Solution:
             if s[i] == s[j]:
                 j = j + 1
             lps[i] = j
+        # so at the end of the first loop,
+        # lps[i] holds the max length l such that
+        # s{0:l] == s[i-l+1:i+1] (start inclusive, end exclusive)
         j = 0
         for i in range(n - 1, -1, -1):
             while j > 0 and s[i] != s[j]:
