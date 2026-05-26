@@ -84,3 +84,59 @@ class Solution:
         # Initial sorted list
         nums = list(range(1, n + 1))
         return self.solve_recursive(nums, n, 0, k)
+
+
+#### How the Direct Math Works (for $n=4, k=9$):
+
+# * Available digits: `[1, 2, 3, 4]`
+# * Convert $k$ to 0-based: `k = 8`
+# * **First digit:** There are $(4-1)! = 6$ permutations starting with each digit.
+# * `index = 8 // 6 = 1`. The digit at index 1 is `2`. (Remove `2` from list)
+# * `k = 8 % 6 = 2`.
+
+
+# * **Second digit:** There are $(3-1)! = 2$ permutations starting with each remaining digit.
+# * Remaining digits: `[1, 3, 4]`
+# * `index = 2 // 2 = 1`. The digit at index 1 is `3`. (Remove `3` from list)
+# * `k = 2 % 2 = 0`.
+
+
+# * **Third digit:** There are $(2-1)! = 1$ permutation per remaining digit.
+# * Remaining digits: `[1, 4]`
+# * `index = 0 // 1 = 0`. The digit at index 0 is `1`. (Remove `1` from list)
+# * `k = 0 % 1 = 0`.
+
+
+# * **Fourth digit:** Remaining digits: `[4]`. Drop it in.
+# * **Result:** `"2314"`
+
+
+class Solution2:
+    def getPermutation(self, n: int, k: int) -> str:
+        # Precompute factorials up to n
+        fact = [1] * (n + 1)
+        for i in range(2, n + 1):
+            fact[i] = fact[i - 1] * i
+
+        # Create the pool of available digits
+        numbers = [str(i) for i in range(1, n + 1)]
+
+        # Convert k to 0-based index
+        k -= 1
+        result = []
+
+        # Determine the digits from left to right
+        for i in range(n, 0, -1):
+            # How many permutations exist for the remaining slots?
+            permutations_per_digit = fact[i - 1]
+
+            # Find the index of the digit we need
+            idx = k // permutations_per_digit
+
+            # Append it and remove it from our available pool
+            result.append(numbers.pop(idx))
+
+            # Update k for the next position
+            k %= permutations_per_digit
+
+        return "".join(result)

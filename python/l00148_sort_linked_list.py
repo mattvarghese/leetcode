@@ -16,7 +16,7 @@ class ListEntry:
         self.head = head
 
 
-class Solution:
+class Solution1:
     def sortList(self, head: Optional[ListNode]) -> Optional[ListNode]:
         if head is None:
             return head
@@ -86,3 +86,88 @@ class Solution:
             previous.next = le1head
 
         return ListEntry(le1.length + le2.length, head)
+
+
+class Solution:
+    def sortList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head or not head.next:
+            return head
+
+        # 1. Get the total length of the linked list: O(N)
+        length = 0
+        curr = head
+        while curr:
+            length += 1
+            curr = curr.next
+
+        dummy = ListNode(0)
+        dummy.next = head
+
+        # 2. Iteratively merge sub-lists of size 1, 2, 4, 8, etc.
+        step = 1
+        while step < length:
+            prev = dummy
+            curr = dummy.next
+
+            while curr:
+                # Extract the left sub-list of length 'step'
+                left = curr
+                right = self.split(left, step)
+
+                # Extract the right sub-list of length 'step' and isolate the rest of the list
+                curr = self.split(right, step)
+
+                # Merge the two isolated sub-lists and link them back into the chain
+                merged_head, merged_tail = self.merge(left, right)
+                prev.next = merged_head
+                prev = merged_tail
+
+            step *= 2  # Double the chunk size for the next pass
+
+        return dummy.next
+
+    def split(self, head: ListNode, step: int) -> Optional[ListNode]:
+        """Splits off a sub-list of the given step size from the head.
+
+        Returns the head of the REMAINING list.
+        """
+        if not head:
+            return None
+
+        # Advance 'step - 1' times to find the end of the current block
+        for _ in range(step - 1):
+            if head.next:
+                head = head.next
+            else:
+                break
+
+        # Disconnect the block from the rest of the list
+        remaining = head.next
+        head.next = None
+        return remaining
+
+    def merge(self, l1: ListNode, l2: ListNode) -> tuple[ListNode, ListNode]:
+        """Merges two sorted lists.
+
+        Returns a tuple of (merged_head, merged_tail).
+        """
+        dummy = ListNode(0)
+        tail = dummy
+
+        while l1 and l2:
+            if l1.val < l2.val:
+                tail.next = l1
+                l1 = l1.next
+            else:
+                tail.next = l2
+                l2 = l2.next
+            tail = tail.next
+
+        # Attach any remaining trailing elements
+        tail.next = l1 if l1 else l2
+
+        # Fast-forward tail to the very end of the merged list segment
+        while tail.next:
+            tail = tail.next
+
+        return dummy.next, tail

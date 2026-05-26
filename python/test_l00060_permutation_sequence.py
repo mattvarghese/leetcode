@@ -6,12 +6,7 @@ import pytest
 # Add the current directory to sys.path so pytest can find the module
 sys.path.append(os.path.dirname(__file__))
 
-from l00060_permutation_sequence import Solution
-
-
-@pytest.fixture
-def sol():
-    return Solution()
+from l00060_permutation_sequence import Solution, Solution2
 
 
 @pytest.mark.parametrize(
@@ -30,6 +25,7 @@ def sol():
         (9, 362880, "987654321"),  # End of largest n range (9!)
     ],
 )
+@pytest.mark.parametrize("sol", [Solution(), Solution2()])
 def test_get_permutation(sol, n, k, expected):
     """
     Verifies that the k-th permutation matches the expected lexicographical string.
@@ -40,6 +36,7 @@ def test_get_permutation(sol, n, k, expected):
     )
 
 
+@pytest.mark.parametrize("sol", [Solution(), Solution2()])
 def test_permutation_integrity(sol):
     """
     Verify that the result is actually a permutation of the numbers 1..n.

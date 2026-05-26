@@ -107,14 +107,12 @@ class Solution3:
 
     def expand_and_update(self, s: str, left: int, right: int, dp2: List[int]):
         while left >= 0 and right < len(s) and s[left] == s[right]:
-            # If the current palindrome starts at the beginning of the string, 0 cuts!
-            if left == 0:
-                dp2[right] = 0
-            else:
-                # Otherwise, it's 1 cut + the best way to cut the prefix before this palindrome
-                # dp2[right] = min(current_min, 1 + min_cuts_before_this_palindrome)
-                if dp2[left - 1] + 1 < dp2[right]:
-                    dp2[right] = dp2[left - 1] + 1
+            # Treat the start of the string as costing -1 cuts
+            previous_cuts = dp2[left - 1] if left > 0 else -1
+
+            # Uniform comparison for every single right position
+            if previous_cuts + 1 < dp2[right]:
+                dp2[right] = previous_cuts + 1
 
             left -= 1
             right += 1

@@ -1,7 +1,7 @@
 # 10 https://leetcode.com/problems/regular-expression-matching/
 
 import pytest
-from l00010_regular_expression_matching import Solution, Solution2
+from l00010_regular_expression_matching import Solution, Solution1, Solution2
 
 
 @pytest.mark.parametrize(
@@ -37,6 +37,6 @@ from l00010_regular_expression_matching import Solution, Solution2
         ("aaaaaaaaaaaaab", "a*a*a*a*a*a*a*a*a*a*c", False),
     ],
 )
-@pytest.mark.parametrize("sol", [Solution(), Solution2()])
+@pytest.mark.parametrize("sol", [Solution(), Solution1(), Solution2()])
 def test_is_match(sol, s, p, expected):
     assert sol.isMatch(s, p) == expected

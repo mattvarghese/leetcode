@@ -84,8 +84,10 @@ class SolutionOtherAndTarget:
 
         # 5. Extract the answer using the binary definition of 'target'
         # Find the first active bit position in the target configuration to read out the answer
-        for i in range(num_bits):
-            if (target >> i) & 1:
-                return state[i]
+        # This is same as:
+        # for i in range(num_bits):
+        #     if (target >> i) & 1:
+        #         return state[i]
+        return state[(target & -target).bit_length() - 1]
 
         return 0

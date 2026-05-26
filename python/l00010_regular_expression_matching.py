@@ -1,7 +1,7 @@
 # 10 https://leetcode.com/problems/regular-expression-matching/
 
 
-class Solution:
+class Solution1:
     def isMatch(self, s: str, p: str) -> bool:
         sn, pn = len(s), len(p)
         if sn == 0 and pn == 0:

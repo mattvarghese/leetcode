@@ -3,7 +3,7 @@
 from typing import List, Optional
 
 import pytest
-from l00148_sort_linked_list import ListNode, Solution
+from l00148_sort_linked_list import ListNode, Solution, Solution1
 
 
 def list_to_link(nums: List[int]) -> Optional[ListNode]:
@@ -48,12 +48,12 @@ def link_to_list(head: Optional[ListNode]) -> List[int]:
         (list(range(1000, 0, -1))),
     ],
 )
-def test_sort_linked_list(l):
+@pytest.mark.parametrize("s", [Solution(), Solution1()])
+def test_sort_linked_list(s, l):
     # 1. Setup: Convert input to Linked List
     head = list_to_link(l)
 
     # 2. Execute: Perform sort
-    s = Solution()
     sorted_head = s.sortList(head)
 
     # 3. Harvest: Convert back to list for easy validation
