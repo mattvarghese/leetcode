@@ -126,6 +126,8 @@ npm test
 * **Bounds for the $n$-th Prime ($p_n$):**
   * **$n \ln n < p_n < n (\ln n + \ln \ln n)$ for all $n \ge 6$**.
   * *Attribution & Context:* The strict lower bound is established by Rosser's Theorem, and the upper bound is proven by Rosser and Schoenfeld using natural logarithms ($\ln$). 
+* **Change-of-Base Formula** for logarithms:
+  * $\log_b(N) = \frac{\log_a(N)}{\log_a(b)}$
 * **Full-Period Primes (Long Primes)**:
   * A prime $p$ is a full-period prime in base 10 if the decimal expansion of $1/p$ has a maximum repeating cycle length of exactly $p - 1$ digits.
   * *Mathematical Truth:* 10 is a **primitive root modulo $p$**. The powers of 10 visit every possible non-zero remainder modulo $p$ before returning to 1 ($10^{p-1} \equiv 1 \pmod p$).
