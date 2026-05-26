@@ -4,29 +4,64 @@ A collection of LeetCode problems solved across multiple programming languages.
 
 ## 🏗️ Repository Architecture
 
-The repository will be organized by language to ensure environment isolation and optimal IDE support.
-
-Current plan for the structure: 
+The repository is organized by domain and language to ensure strict environment isolation, proper toolchain sandboxing, and optimal IDE support.
 
 ```text
 .
-├── python/          # Python 3.13+ (venv-based, Type Hints, Ruff)
-├── typescript/      # Node.js 20+, Vitest for unit testing
-├── cpp/             # Modern C++ (C++20), CMake build system
-├── rust/            # Cargo-managed crates
-└── .github/         # CI/CD workflows for automated solution verification
+├── python/          # Core DSA Solutions (Python 3.13+, Type Hints, Pytest, Ruff)
+├── cpp/             # Modern C++ Solutions (C++20, CMake Build Pipelines)
+├── sql/             # Relational Database Sandboxes (PostgreSQL, SQLAlchemy ORM)
+├── sqlite/          # Local Relational Sandboxes (SQLite Engine, Interactive REPL)
+├── mongodb/         # NoSQL Document Sandboxes (Sharded Clusters, Mongosh Scripts)
+└── .github/         # Automated Production Verification (CI/CD GitHub Actions)
+
 ```
 
 ## 📊 Progress Dashboard
 
-| #   | Problem | Difficulty | Python | TypeScript | C++ | Rust |
-| :-- | :--- | :--- | :---: | :---: | :---: | :---: |
-| 001 | [Two Sum](https://leetcode.com/problems/two-sum/) | Easy | ✅ | ❌ | ❌ | ❌ |
-| 002 | [Add Two Numbers](https://leetcode.com/problems/add-two-numbers/) | Medium | ❌ | ❌ | ✅ | ❌ |
-| 003 | [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) | Medium | ✅ | ❌ | ❌ | ❌ |
-| 004 | [Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/) | Hard | ❌ | ❌ | ✅ | ❌ |
+| # | Problem / Challenge | Difficulty | Python | C++ |
+| --- | --- | --- | --- | --- |
+| 001 | [Two Sum](https://leetcode.com/problems/two-sum/) | Easy | ✅ | ❌ |
+| 002 | [Add Two Numbers](https://leetcode.com/problems/add-two-numbers/) | Medium | ❌ | ✅ |
+| 003 | [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) | Medium | ✅ | ❌ |
+| 004 | [Median of Two Sorted Arrays](https://leetcode.com/problems/median-of-two-sorted-arrays/) | Hard | ❌ | ✅ |
+| 006 | [Zigzag Conversion](https://leetcode.com/problems/zigzag-conversion/) | Medium | ✅ | ❌ |
+| 007 | [Reverse Integer](https://leetcode.com/problems/reverse-integer/) | Medium | ✅ | ❌ |
+| 010 | [Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/) | Hard | ✅ | ❌ |
+| 015 | [3Sum](https://www.google.com/search?q=https://leetcode.com/problems/three-sum/) | Medium | ✅ | ❌ |
+| 016 | [3Sum Closest](https://leetcode.com/problems/3sum-closest/) | Medium | ✅ | ❌ |
+| 045 | [Jump Game II](https://leetcode.com/problems/jump-game-ii/) | Medium | ✅ | ❌ |
+| 046 | [Permutations](https://leetcode.com/problems/permutations/) | Medium | ✅ | ❌ |
+| 072 | [Edit Distance](https://leetcode.com/problems/edit-distance/) | Medium | ✅ | ❌ |
+| 108 | [Convert Sorted Array to Binary Search Tree](https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/) | Easy | ✅ | ❌ |
+| 131 | [Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning/) | Medium | ✅ | ❌ |
+| 136 | [Single Number](https://leetcode.com/problems/single-number/) | Easy | ✅ | ❌ |
+| 137 | [Single Number II](https://leetcode.com/problems/single-number-ii/) | Medium | ✅ | ❌ |
+| 139 | [Word Break](https://leetcode.com/problems/word-break/) | Medium | ✅ | ❌ |
+| 140 | [Word Break II](https://leetcode.com/problems/word-break-ii/) | Hard | ✅ | ❌ |
+| 148 | [Sort List](https://leetcode.com/problems/sort-list/) | Medium | ✅ | ❌ |
+| 149 | [Max Points on a Line](https://leetcode.com/problems/max-points-on-a-line/) | Hard | ✅ | ❌ |
+| 189 | [Rotate Array](https://leetcode.com/problems/rotate-array/) | Medium | ✅ | ❌ |
+| 198 | [House Robber](https://leetcode.com/problems/house-robber/) | Medium | ✅ | ❌ |
+| 212 | [Word Search II](https://leetcode.com/problems/word-search-ii/) | Hard | ✅ | ❌ |
+| 213 | [House Robber II](https://leetcode.com/problems/house-robber-ii/) | Medium | ✅ | ❌ |
+| 214 | [Shortest Palindrome](https://leetcode.com/problems/shortest-palindrome/) | Hard | ✅ | ❌ |
+| 215 | [Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/) | Medium | ✅ | ❌ |
+| 1306 | [Jump Game III](https://leetcode.com/problems/jump-game-iii/) | Medium | ✅ | ❌ |
+| 💡 | **Project Euler Challenges** |  |  |  |
+| E07 | [Project Euler #7: 10001st Prime](https://projecteuler.net/problem=7) | Easy | ✅ | — |
+| E36 | [Project Euler #36: Double-base Palindromes](https://projecteuler.net/problem=36) | Easy | ✅ | — |
+| E39 | [Project Euler #39: Integer Right Triangles](https://projecteuler.net/problem=39) | Easy | ✅ | — |
+| E40 | [Project Euler #40: Champernowne's Constant](https://projecteuler.net/problem=40) | Easy | ✅ | — |
+| E41 | [Project Euler #41: Pandigital Prime](https://projecteuler.net/problem=41) | Medium | ✅ | — |
+| 🛠️ | **Core Data Structures & References** |  |  |  |
+| P07 | Dijkstra's Shortest Path Algorithm (Indexed Min-Heap) | Core | ✅ | — |
+| P10 | Heap Sort Engine (In-Place Mutable Tree Array) | Core | ✅ | — |
+| P14 | Infinite Sieve of Eratosthenes Dynamic Pipeline | Core | ✅ | — |
+| R00 | Python Exception Hierarchy Topology & Menu | Reference | ✅ | — |
+| R01 | Python Multiprocessing vs Threading Benchmarker | Reference | ✅ | — |
 
-**Legend:** ✅ Solved | 🏗️ In Progress | ❌ Not Started
+**Legend:** ✅ Solved | 🏗️ In Progress | ❌ Not Started | — Not Applicable
 
 ---
 
@@ -88,6 +123,9 @@ npm test
 * For max or min in a sliding window, use a deque like in `p__009`
 * **Sieve of Eratosthenes** for primes, see `e00007`
   * A Modified version of the sieve can get a list of all prime factors
+* **Bounds for the $n$-th Prime ($p_n$):**
+  * **$n \ln n < p_n < n (\ln n + \ln \ln n)$ for all $n \ge 6$**.
+  * *Attribution & Context:* The strict lower bound is established by Rosser's Theorem, and the upper bound is proven by Rosser and Schoenfeld using natural logarithms ($\ln$). 
 * **Full-Period Primes (Long Primes)**:
   * A prime $p$ is a full-period prime in base 10 if the decimal expansion of $1/p$ has a maximum repeating cycle length of exactly $p - 1$ digits.
   * *Mathematical Truth:* 10 is a **primitive root modulo $p$**. The powers of 10 visit every possible non-zero remainder modulo $p$ before returning to 1 ($10^{p-1} \equiv 1 \pmod p$).
@@ -111,34 +149,11 @@ npm test
 * Permutation: `p(n,k) = n! / (n-k)!`
 * Combination: `c(n,k) = n! / k!(n-k)!` without repetitions
   * With repetitions: = `c(n+k-1,k) = (n+k-1)! / k! (n-1)!`  (or k items into n bins)
-
-
-
-# Analytical Derivation of Power Sums
-
-The general strategy for deriving the formula for the sum of $p$-th powers relies on the **Method of Differences** (telescoping sums) and the **Binomial Theorem**.
-
-# 1. The Binomial Expansion
-To derive the sum of powers up to $k$, we utilize the expansion of $(n+1)^{k+1}$:
-$$(n+1)^k = \sum_{r=0}^{k} \binom{k}{r} n^{k-r}$$
-
-# 2. The Method of Differences
-By shifting the $n^k$ term to the left side, we create a difference identity:
-$$(n+1)^k - n^k = \binom{k}{1}n^{k-1} + \binom{k}{2}n^{k-2} + \dots + \binom{k}{k}$$
-
-When we sum both sides from $1$ to $N$, the left side "telescopes," meaning all intermediate terms cancel out except for the boundaries:
-$$\sum_{n=1}^N ((n+1)^k - n^k) = (N+1)^k - 1^k$$
-
-# 3. Solving for the $k$-th Power
-The right side of the summation becomes a combination of lower-order power sums:
-$$(N+1)^k - 1 = \binom{k}{1}\sum n^{k-1} + \binom{k}{2}\sum n^{k-2} + \dots + \binom{k}{k}\sum 1$$
-
-To find the formula for the sum of $k-1$ powers, you simply isolate the $\sum n^{k-1}$ term and substitute the known formulas for all lower-order sums.
-
-# 4. Summary of Common Results
-*   **Sum of Integers ($k=2$):** $\sum_{n=1}^N n = \frac{N(N+1)}{2}$
-*   **Sum of Squares ($k=3$):** $\sum_{n=1}^N n^2 = \frac{N(N+1)(2N+1)}{6}$
-*   **Sum of Cubes ($k=4$):** $\sum_{n=1}^N n^3 = \left[ \frac{N(N+1)}{2} \right]^2$
+* **Series sum** of k-th powers
+  * **Sum of Integers ($k=1$):** $\sum_{n=1}^N n = \frac{N(N+1)}{2}$
+  * **Sum of Squares ($k=2$):** $\sum_{n=1}^N n^2 = \frac{N(N+1)(2N+1)}{6}$
+  * **Sum of Cubes ($k=3$):** $\sum_{n=1}^N n^3 = \left[ \frac{N(N+1)}{2} \right]^2$
+  * See `markdown/p__001_series_sum_of_kth_power.md` for derivation
 
 
 
